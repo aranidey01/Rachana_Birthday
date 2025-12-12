@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pasandida Aurat's Birthday</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap');
+
+  body {
+    margin: 0; background: #f9f5f0; font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+  }
+  .page {
+    height: 100vh; width: 100vw; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;
+    padding: 0 15px;
+    box-sizing: border-box;
+  }
+  #page1 {
+    background: #fff url('https://i.ibb.co/PvL56wJ3/IMG-20251212-220715.jpg') center center/cover no-repeat;
+    overflow: hidden;
+  }
+
+  /* Sparkles and sprinkles falling */
+  .sparkle {
+    position: absolute; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle, #fff 40%, transparent 70%);
+    animation: twinkle 3s infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% {opacity: 0.9;}
+    50% {opacity: 0.2;}
+  }
+  .sprinkle {
+    position: absolute; width: 3px; height: 10px; background: linear-gradient(180deg, #ff9a9e, #fad0c4);
+    border-radius: 50%; animation: fall 4s linear infinite;
+  }
+  @keyframes fall {
+    0% {transform: translateY(-10vh);}
+    100% {transform: translateY(110vh);}
+  }
+  #page1 button {
+    position: absolute; bottom: 40px; background: #ff8ba7; border: none; padding: 14px 28px; font-size: 20px;
+    border-radius: 25px; color: white; cursor: pointer; box-shadow: 0 0 12px #ff8ba7;
+    transition: background 0.3s;
+  }
+  #page1 button:hover {
+    background: #ff5a7d;
+  }
+
+  #page2, #page3 {
+    background: #fff; color: #333; padding: 40px 15px 20px; text-align: center; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #page2 h1 {
+    font-weight: 600; font-size: 2.4rem; margin-bottom: 20px; color: #e91e63;
+  }
+  #page2 p {
+    font-size: 1.2rem; line-height: 1.5; max-width: 100%; margin: auto;
+  }
+  #page3 {
+    padding-top: 70px; position: relative;
+  }
+
+  /* Butterflies container */
+  #butterflies {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible;
+    z-index: 10;
+  }
+  .butterfly {
+    position: absolute; width: 30px; height: 30px; background: url('https://i.ibb.co/r0K0VzG/butterfly.png') no-repeat center/contain;
+    animation-timing-function: ease-in-out;
+    opacity: 0.8;
+  }
+
+  /* Photos grid */
+  #gallery {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; max-width: 100vw; margin: auto;
+  }
+  #gallery img {
+    width: 48vw; /* half of viewport width */
+    max-width: 230px;
+    border-radius: 18px; object-fit: cover;
+    box-shadow: 0 0 18px #ff8ba7;
+    opacity: 0; transform: translateY(40px);
+    animation-fill-mode: forwards;
+  }
+
+  /* Animation for images appearing one by one */
+  @keyframes slideUpFadeIn {
+    from {opacity: 0; transform: translateY(40px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  /* Responsive text size for small phones */
+  @media (max-width: 360px) {
+    #page2 h1 {
+      font-size: 2rem;
+    }
+    #page2 p {
+      font-size: 1rem;
+    }
+    #page1 button {
+      font-size: 18px; padding: 12px 22px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<audio id="pianoSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7d4bf77f13.mp3?filename=piano-melody-5996.mp3" loop></audio>
+
+<div id="page1" class="page">
+  <div id="sparkles"></div>
+  <button id="nextBtn">Next</button>
+</div>
+
+<div id="page2" class="page" style="display:none;">
+  <h1>Happy Birthday, Rachana! 🎉</h1>
+  <p>
+    Wishing you a day as beautiful, elegant, and kind as you are.<br>
+    May your journey ahead be filled with endless joy, success, and love.<br>
+    Stay graceful, keep shining, and may all your dreams come true!
+  </p>
+  <button id="toGalleryBtn">See Memories</button>
+</div>
+
+<div id="page3" class="page" style="display:none;">
+  <div id="butterflies"></div>
+  <div id="gallery"></div>
+</div>
+
+<script>
+  const photos = [
+    "https://i.ibb.co/ZRLpJ8Ws/IMG-20251212-220219.jpg",
+    "https://i.ibb.co/0jSjhq7R/IMG-20251212-211434.jpg",
+    "https://i.ibb.co/DPBtGZCQ/IMG-20250901-WA0005.jpg",
+    "https://i.ibb.co/Jjgd2M9v/IMG-20250928-WA0003.jpg",
+    "https://i.ibb.co/W4kC4DN1/IMG-20250908-WA0008.jpg",
+    "https://i.ibb.co/20RtmBbX/IMG-20250930-WA0025.jpg",
+    // New images
+    "https://i.ibb.co/nsfMdL0r/Whats-App-Image-2025-12-12-at-22-44-04.jpg",
+    "https://i.ibb.co/kVGkwNBY/Whats-App-Image-2025-12-12-at-22-44-05-1.jpg",
+    "https://i.ibb.co/jpSndVS/Whats-App-Image-2025-12-12-at-22-44-05.jpg",
+    "https://i.ibb.co/FkR2tZJj/Whats-App-Image-2025-12-12-at-22-44-06-1.jpg",
+    "https://i.ibb.co/MxSyf0M7/Whats-App-Image-2025-12-12-at-22-44-06.jpg"
+  ];
+
+  // Sprinkles and sparkles
+  function createSprinklesAndSparkles() {
+    const container = document.getElementById('sparkles');
+    for(let i=0;i<40;i++){
+      const s=document.createElement('div');
+      s.className='sparkle';
+      s.style.top=Math.random()*100+'vh';
+      s.style.left=Math.random()*100+'vw';
+      s.style.animationDelay=(Math.random()*3)+'s';
+      container.appendChild(s);
+    }
+    for(let i=0;i<80;i++){
+      const sp=document.createElement('div');
+      sp.className='sprinkle';
+      sp.style.top=Math.random()*(-10)+'vh';
+      sp.style.left=Math.random()*100+'vw';
+      sp.style.animationDuration=(2+Math.random()*3)+'s';
+      sp.style.animationDelay=(Math.random()*4)+'s';
+      container.appendChild(sp);
+    }
+  }
+  createSprinklesAndSparkles();
+
+  // Piano music
+  const pianoSound = document.getElementById('pianoSound');
+  window.onload = () => {
+    pianoSound.volume=0.15;
+    pianoSound.play().catch(()=>console.log('Autoplay blocked'));
+  };
+
+  const page1=document.getElementById('page1');
+  const page2=document.getElementById('page2');
+  const page3=document.getElementById('page3');
+  const nextBtn=document.getElementById('nextBtn');
+  const toGalleryBtn=document.getElementById('toGalleryBtn');
+  const gallery=document.getElementById('gallery');
+  const butterfliesContainer=document.getElementById('butterflies');
+
+  nextBtn.onclick=()=>{page1.style.display='none';page2.style.display='flex';};
+  toGalleryBtn.onclick=()=>{page2.style.display='none';page3.style.display='flex';startGalleryAnimation();};
+
+  function createButterfly(){
+    const b=document.createElement('div');
+    b.className='butterfly';
+    b.style.top=(Math.random()*70+5)+'vh';
+    b.style.left=(Math.random()*90+5)+'vw';
+    b.style.animationDuration=(8+Math.random()*7)+'s';
+    b.style.animationName='fly'+(Math.floor(Math.random()*3)+1);
+    butterfliesContainer.appendChild(b);
+    setTimeout(()=>butterfliesContainer.removeChild(b),15000);
+  }
+
+  const style=document.createElement('style');
+  style.textContent=`
+    @keyframes fly1 {0%{transform:translate(0,0) rotate(0deg);}25%{transform:translate(20px,-30px) rotate(15deg);}50%{transform:translate(40px,10px) rotate(-15deg);}75%{transform:translate(15px,20px) rotate(10deg);}100%{transform:translate(0,0) rotate(0deg);}}
+    @keyframes fly2 {0%{transform:translate(0,0) rotate(0deg);}25%{transform:translate(-15px,-20px) rotate(-10deg);}50%{transform:translate(-30px,15px) rotate(20deg);}75%{transform:translate(-10px,25px) rotate(-15deg);}100%{transform:translate(0,0) rotate(0deg);}}
+    @keyframes fly3 {0%{transform:translate(0,0) rotate(0deg);}25%{transform:translate(10px,-25px) rotate(10deg);}50%{transform:translate(25px,20px) rotate(-20deg);}75%{transform:translate(5px,30px) rotate(15deg);}100%{transform:translate(0,0) rotate(0deg);}}
+  `;
+  document.head.appendChild(style);
+
+  let butterflyInterval;
+  function startButterflies(){butterflyInterval=setInterval(createButterfly,1000);}
+  function stopButterflies(){clearInterval(butterflyInterval);}
+
+  function startGalleryAnimation(){
+    gallery.innerHTML='';
+    photos.forEach((src,i)=>{
+      const img=document.createElement('img');
+      img.src=src;
+      img.style.animation=`slideUpFadeIn 0.6s ease forwards`;
+      img.style.animationDelay=(i*0.45)+'s';
+      gallery.appendChild(img);
+    });
+    setTimeout(startButterflies,photos.length*450+600);
+  }
+</script>
+
+<style>
+  @keyframes slideUpFadeIn{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+</style>
+
+</body>
+</html>
